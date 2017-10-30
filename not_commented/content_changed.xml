@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns0:document-content xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+                      xmlns:ns1="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:ns2="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
+                      xmlns:ns3="http://openoffice.org/2009/office" xmlns:ns4="urn:oasis:names:tc:opendocument:xmlns:text:1.0" ns0:version="1.2">
+    <ns0:scripts/>
+    <ns0:font-face-decls>
+        <ns1:font-face ns1:name="Tahoma1" ns2:font-family="Tahoma"/>
+        <ns1:font-face ns1:font-family-generic="roman" ns1:font-pitch="variable" ns1:name="Times New Roman" ns2:font-family="'Times New Roman'"/>
+        <ns1:font-face ns1:font-family-generic="swiss" ns1:font-pitch="variable" ns1:name="Arial" ns2:font-family="Arial"/>
+        <ns1:font-face ns1:font-family-generic="system" ns1:font-pitch="variable" ns1:name="Andale Sans UI" ns2:font-family="'Andale Sans UI'"/>
+        <ns1:font-face ns1:font-family-generic="system" ns1:font-pitch="variable" ns1:name="Tahoma" ns2:font-family="Tahoma"/>
+    </ns0:font-face-decls>
+    <ns0:automatic-styles>
+        <ns1:style ns1:family="paragraph" ns1:name="P1" ns1:parent-style-name="Standard">
+            <ns1:text-properties ns3:paragraph-rsid="001a1f53" ns3:rsid="000017ac"/>
+        </ns1:style>
+    </ns0:automatic-styles>
+    <ns0:body>
+        <ns0:text>
+            <ns4:sequence-decls>
+                <ns4:sequence-decl ns4:display-outline-level="0" ns4:name="Illustration"/>
+                <ns4:sequence-decl ns4:display-outline-level="0" ns4:name="Table"/>
+                <ns4:sequence-decl ns4:display-outline-level="0" ns4:name="Text"/>
+                <ns4:sequence-decl ns4:display-outline-level="0" ns4:name="Drawing"/>
+            </ns4:sequence-decls>
+            <ns4:p ns4:style-name="P1">Hello world!
+                <ns0:annotation ns0:name="__Annotation__2_1907439360">
+                    <dc:creator>&lt;анонимный&gt;</dc:creator>
+                    <dc:date>2017-10-26T14:10:32.055000000</dc:date>
+                    <ns4:p ns4:style-name="P2">
+                        <ns4:span ns4:style-name="T1">Текст комментария</ns4:span>
+                    </ns4:p>
+                </ns0:annotation>
+                This is commented text.
+                <ns0:annotation-end ns0:name="__Annotation__2_1907439360"/>
+                Bye world!
+            </ns4:p>
+        </ns0:text>
+    </ns0:body>
+</ns0:document-content>
