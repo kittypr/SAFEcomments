@@ -1,18 +1,17 @@
-import xml.etree.ElementTree as ElementTree
+from lxml import etree
+import odt_namespaces
+import annotation
+import difflib
 
-# ns = {"office": "urn:oasis:names:tc:opendocument:xmlns:office:1.0",
-#      "text": "urn:oasis:names:tc:opendocument:xmlns:text:1.0"}
-commented_tree = ElementTree.parse("commented/content.xml")
-just_tree = ElementTree.parse("not_commented/content.xml")
+# for key, value in odt_namespaces.namespaces.items():
+#     etree.register_namespace(key, value)
+#
+# commented_tree = etree.parse("commented/content.xml")
+# just_tree = etree.parse("not_commented/content.xml")
+#
+# commented_tree = etree.parse('commented/content.xml')
+# for a in annotation.extract_annotations(commented_tree):
+#     print(commented_tree.getpath(a.annotation_node), commented_tree.getpath(a.parent_node))
 
-for annotation_parent in commented_tree.findall('.//{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation/..'):
-    annotation = annotation_parent.find('./{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation')
-    annotation_end = annotation_parent.find('./{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation-end')
-    for p in just_tree.findall('.//{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p'):
-        if p.text.strip().find(annotation.tail.strip()) != -1:
-            spl = p.text.split(annotation.tail.strip())
-            p.text = spl[0]
-            p.append(annotation)
-            annotation_end.tail = spl[1]
-            p.append(annotation_end)
-just_tree.write('not_commented/content_changed.xml', 'UTF-8', True)
+matcher = difflib.SequenceMatcher(None, string_1, string_2)
+print(matcher.ratio())
