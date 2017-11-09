@@ -21,4 +21,4 @@ extractor.close()
 new_etree = etree.parse("content.xml")
 compare.compare(annotations_list, new_etree)
 for a in annotations_list:
-    print(new_etree.getpath(a.new_parent))
+    compare.find_new_string(a.get_comment_text(), annotation.get_text(a.new_parent))
