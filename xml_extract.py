@@ -3,7 +3,7 @@ import zipfile
 
 class XMLExtractor(object):
 
-    def __init__(self, path, need, ):
+    def __init__(self, path, need):
         self.old_path = path
         self.need = need
         self.old_archive = None

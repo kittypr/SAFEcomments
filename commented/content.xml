@@ -17,6 +17,7 @@
                          xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
     <office:scripts/>
     <office:font-face-decls>
+        <style:font-face style:name="OpenSymbol" svg:font-family="OpenSymbol" style:font-charset="x-symbol"/>
         <style:font-face style:name="Tahoma1" svg:font-family="Tahoma"/>
         <style:font-face style:name="Times New Roman" svg:font-family="&apos;Times New Roman&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>
         <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
@@ -24,13 +25,43 @@
         <style:font-face style:name="Tahoma" svg:font-family="Tahoma" style:font-family-generic="system" style:font-pitch="variable"/>
     </office:font-face-decls>
     <office:automatic-styles>
+        <style:style style:name="Таблица1" style:family="table">
+            <style:table-properties style:width="17cm" table:align="margins"/>
+        </style:style>
+        <style:style style:name="Таблица1.A" style:family="table-column">
+            <style:table-column-properties style:column-width="3.401cm" style:rel-column-width="13107*"/>
+        </style:style>
+        <style:style style:name="Таблица1.A1" style:family="table-cell">
+            <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="0.05pt solid #000000"
+                                         fo:border-bottom="0.05pt solid #000000"/>
+        </style:style>
+        <style:style style:name="Таблица1.E1" style:family="table-cell">
+            <style:table-cell-properties fo:padding="0.097cm" fo:border="0.05pt solid #000000"/>
+        </style:style>
+        <style:style style:name="Таблица1.A2" style:family="table-cell">
+            <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none"
+                                         fo:border-bottom="0.05pt solid #000000"/>
+        </style:style>
+        <style:style style:name="Таблица1.E2" style:family="table-cell">
+            <style:table-cell-properties fo:padding="0.097cm" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none"
+                                         fo:border-bottom="0.05pt solid #000000"/>
+        </style:style>
         <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard">
             <style:text-properties officeooo:rsid="000017ac" officeooo:paragraph-rsid="000017ac"/>
         </style:style>
         <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Standard">
             <style:text-properties officeooo:rsid="000017ac" officeooo:paragraph-rsid="00044d70"/>
         </style:style>
-        <style:style style:name="P3" style:family="paragraph">
+        <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Standard">
+            <style:text-properties officeooo:rsid="00073dbb" officeooo:paragraph-rsid="00073dbb"/>
+        </style:style>
+        <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+            <style:text-properties officeooo:rsid="00073dbb" officeooo:paragraph-rsid="00073dbb"/>
+        </style:style>
+        <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Standard">
+            <style:text-properties officeooo:paragraph-rsid="00073dbb"/>
+        </style:style>
+        <style:style style:name="P6" style:family="paragraph">
             <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:line-height="100%" fo:text-align="start"
                                         fo:text-indent="0cm" style:text-autospace="ideograph-alpha" style:punctuation-wrap="hanging" style:line-break="strict"
                                         style:writing-mode="lr-tb">
@@ -39,6 +70,9 @@
             <style:text-properties fo:hyphenate="false"/>
         </style:style>
         <style:style style:name="T1" style:family="text">
+            <style:text-properties officeooo:rsid="00073dbb"/>
+        </style:style>
+        <style:style style:name="T2" style:family="text">
             <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" style:text-outline="false"
                                    style:text-line-through-style="none" style:text-line-through-type="none" style:text-position="0% 100%" style:font-name="Times New Roman"
                                    fo:font-size="10pt" fo:letter-spacing="normal" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:text-shadow="none"
@@ -49,6 +83,58 @@
                                    style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:text-scale="100%" style:font-relief="none"
                                    style:text-overline-style="none" style:text-overline-color="font-color"/>
         </style:style>
+        <text:list-style style:name="L1">
+            <text:list-level-style-bullet text:level="1" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm" fo:text-indent="-0.635cm" fo:margin-left="1.27cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="2" text:style-name="Bullet_20_Symbols" text:bullet-char="◦">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm" fo:text-indent="-0.635cm" fo:margin-left="1.905cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="3" text:style-name="Bullet_20_Symbols" text:bullet-char="▪">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm" fo:text-indent="-0.635cm" fo:margin-left="2.54cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="4" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm" fo:text-indent="-0.635cm" fo:margin-left="3.175cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="5" text:style-name="Bullet_20_Symbols" text:bullet-char="◦">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm" fo:text-indent="-0.635cm" fo:margin-left="3.81cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="6" text:style-name="Bullet_20_Symbols" text:bullet-char="▪">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm" fo:text-indent="-0.635cm" fo:margin-left="4.445cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="7" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm" fo:text-indent="-0.635cm" fo:margin-left="5.08cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="8" text:style-name="Bullet_20_Symbols" text:bullet-char="◦">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm" fo:text-indent="-0.635cm" fo:margin-left="5.715cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="9" text:style-name="Bullet_20_Symbols" text:bullet-char="▪">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm" fo:text-indent="-0.635cm" fo:margin-left="6.35cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+            <text:list-level-style-bullet text:level="10" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+                <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+                    <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm" fo:text-indent="-0.635cm" fo:margin-left="6.985cm"/>
+                </style:list-level-properties>
+            </text:list-level-style-bullet>
+        </text:list-style>
     </office:automatic-styles>
     <office:body>
         <office:text>
@@ -62,15 +148,15 @@
                 <office:annotation office:name="__Annotation__2_1907439360">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-26T14:10:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 <office:annotation office:name="__Annotation__4_106444811">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-31T15:58:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Секонд текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Секонд текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 This is com<office:annotation-end office:name="__Annotation__4_106444811"/>mented text.
@@ -82,15 +168,15 @@
                 <office:annotation office:name="__Annotation__2_19074393601">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-26T14:10:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 <office:annotation office:name="__Annotation__4_1064448111">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-31T15:58:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Секонд текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Секонд текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 This is com<office:annotation-end office:name="__Annotation__4_1064448111"/>mented text.
@@ -102,21 +188,115 @@
                 <office:annotation office:name="__Annotation__2_19074393602">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-26T14:10:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 <office:annotation office:name="__Annotation__4_1064448112">
                     <dc:creator>&lt;анонимный&gt;</dc:creator>
                     <dc:date>2017-10-31T15:58:32</dc:date>
-                    <text:p text:style-name="P3">
-                        <text:span text:style-name="T1">Секонд текст комментария</text:span>
+                    <text:p text:style-name="P6">
+                        <text:span text:style-name="T2">Секонд текст комментария</text:span>
                     </text:p>
                 </office:annotation>
                 This is com<office:annotation-end office:name="__Annotation__4_1064448112"/>mented text.
                 <office:annotation-end office:name="__Annotation__2_19074393602"/>
                 Bye world!
             </text:p>
+            <text:p text:style-name="P2"/>
+            <text:p text:style-name="P5">
+                <text:span text:style-name="T1">JUGA JAGA list:</text:span>
+            </text:p>
+            <table:table table:name="Таблица1" table:style-name="Таблица1">
+                <table:table-column table:style-name="Таблица1.A" table:number-columns-repeated="5"/>
+                <table:table-row>
+                    <table:table-cell table:style-name="Таблица1.A1" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A1" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A1" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A1" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.E1" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.E2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.E2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.E2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.A2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="Таблица1.E2" office:value-type="string">
+                        <text:p text:style-name="Table_20_Contents"/>
+                    </table:table-cell>
+                </table:table-row>
+            </table:table>
+            <text:p text:style-name="P5"/>
+            <text:p text:style-name="P3">BEBEBEBE</text:p>
         </office:text>
     </office:body>
 </office:document-content>
