@@ -18,7 +18,7 @@ def find_new_string(string, text):
     similarity = 0
     off = 0
     last_char = None
-    sm = difflib.SequenceMatcher(None, string, text)
+    sm = difflib.SequenceMatcher(None, string, text, False)
     while sm.ratio() > similarity:
         similarity = sm.ratio()
         last_char = text[0]
@@ -29,6 +29,7 @@ def find_new_string(string, text):
         text = last_char + text
         off -= 1
     last_char = None
+    similarity = 0
     while sm.ratio() > similarity:
         similarity = sm.ratio()
         last_char = text[-1]
