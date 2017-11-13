@@ -2,6 +2,7 @@ import odt_namespaces
 import annotation
 import difflib
 
+MIN_SIMILARITY = 0.8
 
 def compare(annotations_list, new_etree):
     ratios = [0] * len(annotations_list)
@@ -15,6 +16,18 @@ def compare(annotations_list, new_etree):
 
 
 def find_new_string(string, text):
+    global MIN_SIMILARITY
+    result = partly_deletion(string, text)
+    if result[-1] >= MIN_SIMILARITY:
+        return result
+    sm = difflib.SequenceMatcher(None, string, text, False)
+    result = sm.find_longest_match(0, len(string), 0, len(text))
+    if result[-1]/len(string) >= MIN_SIMILARITY:
+        return result[1], result[-1], result[-1]/len(string)
+    return None
+
+
+def partly_deletion(string, text):
     similarity = 0
     off = 0
     last_char = None
@@ -37,7 +50,4 @@ def find_new_string(string, text):
         sm.set_seq2(text)
     if last_char is not None:
         text = text + last_char
-    print(text)
-    print('\n')
     return off, len(text), similarity
-

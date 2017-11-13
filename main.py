@@ -21,4 +21,8 @@ extractor.close()
 new_etree = etree.parse("content.xml")
 compare.compare(annotations_list, new_etree)
 for a in annotations_list:
-    compare.find_new_string(a.get_comment_text(), annotation.get_text(a.new_parent))
+    c = compare.find_new_string(a.get_comment_text(), annotation.get_text(a.new_parent))
+    if c is not None:
+        print(annotation.get_text(a.new_parent)[c[0]:c[0] + c[1]])
+        print(c[-1])
+
