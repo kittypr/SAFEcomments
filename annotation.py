@@ -1,4 +1,3 @@
-from lxml import etree
 import odt_namespaces
 
 
@@ -16,7 +15,14 @@ class Annotation:
         return get_text(self.parent_node)
 
     def get_comment_text(self):
-        return self.annotation_node.tail
+        string = ''
+        if self.annotation_node.tail:
+            string += self.annotation_node.tail
+        sibling = self.annotation_node.getnext()
+        while sibling is not None and sibling.tag != '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation-end':
+            string += get_text(sibling)
+            sibling = sibling.getnext()
+        return string
 
 
 def extract_annotations(element_tree):
@@ -27,7 +33,6 @@ def extract_annotations(element_tree):
 
 
 def get_text(element):
-    # print(element_tree.getpath(element))
     string = ''
     if element.text:
         string += element.text
