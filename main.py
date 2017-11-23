@@ -19,35 +19,62 @@ def register_namespaces():
 
 
 def extract_xml(odt_filename):
-    extractor = xml_extract.XMLExtractor(odt_filename, 'content.xml')
-    extractor.extract()
-    extractor.close()
+    extractor = xml_extract.XMLExtractor(odt_filename)
+    extractor.extract('content.xml')
+    return extractor
 
 
 def transfer_annotations(annotations_list):
     for a in annotations_list:
         new_parent_text = annotation.get_text(a.new_parent)
-        c = compare.find_new_string(a.get_comment_text(), new_parent_text)
-        print(c)
-        if c is not None:
-            print(new_parent_text[c[0]:c[0] + c[1]])
-            print(c[-1])
+        if a.has_text:
+            c = compare.find_new_string(a.get_annotation_text(), new_parent_text)
+            if c is not None:
+                print(new_parent_text[c[0]:c[0] + c[1]])
+                print(c[-1])
+            else:
+                a.annotation_node.tail = a.new_parent.text
+                a.new_parent.text = None
+                a.new_parent.insert(0, a.annotation_node)  # TODO remove office:name attribute
         else:
-            a.annotation_node.tail = a.new_parent.text
-            a.new_parent.text = None
-            a.new_parent.insert(0, a.annotation_node)
+            c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text)
+            c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text)
+            if c1 is not None and c2 is not None:
+                c = c1 if c1[-1] > c2[-1] else c2
+                place = 'tail'
+            elif c1 is not None:
+                c = c1
+                place = 'tail'
+            else:
+                c = c2
+                place = 'head'
+            if c is not None:
+                if place == 'tail':
+                    a.annotation_node.tail = a.new_parent.text[c[0]:len(a.new_parent.text)]
+                    a.new_parent.text = a.new_parent.text[0:c[0]]
+                    a.new_parent.insert(0, a.annotation_node)
+                else:
+                    a.annotation_node.tail = a.new_parent.text[c[0] + c[1]:len(a.new_parent.text)]
+                    a.new_parent.text = a.new_parent.text[0:c[0] + c[1]]
+                    a.new_parent.insert(0, a.annotation_node)
+            else:
+                a.annotation_node.tail = a.new_parent.text
+                a.new_parent.text = None
+                a.new_parent.insert(0, a.annotation_node)  # TODO remove office:name attribute
 
 
 if __name__ == '__main__':
     register_namespaces()
 
-    extract_xml(args.src)
+    extractor = extract_xml(args.src)
     commented_tree = etree.parse('content.xml')
     annotations_list = annotation.extract_annotations(commented_tree)
+    extractor.close()
 
-    extract_xml(args.dest)
+    extractor = extract_xml(args.dest)
     not_commented_tree = etree.parse("content.xml")
     compare.compare(annotations_list, not_commented_tree)
 
     transfer_annotations(annotations_list)
-    not_commented_tree.write(file=args.output, encoding='UTF-8', method='xml')
+    not_commented_tree.write('content.xml', encoding='UTF-8', method='xml')
+    extractor.write('content.xml', args.output)
