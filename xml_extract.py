@@ -7,43 +7,69 @@ import sys
 class XMLExtractor(object):
 
     def __init__(self, path):
-        self.old_path = path
-        self.old_archive = None
+        self.path = path
+        self.archive = None
 
-    def extract(self, need):
-        if not zipfile.is_zipfile(self.old_path):
-            print('You used a wrong file. Try again.')
+    def extract(self, name):
+        """Extracting file from archive in script`s directory.
+
+        :param name: the name of the file that need to be extracted.
+        :return: False on errors, path to extracted file on success.
+
+        """
+        if not zipfile.is_zipfile(self.path):
+            print('File you used is not archive. Extraction failed.')
             return False
-        self.old_archive = zipfile.ZipFile(self.old_path, 'r')
-        files = self.old_archive.infolist()
+        self.archive = zipfile.ZipFile(self.path, 'r')
+        files = self.archive.infolist()
         exist = False
         member = None
         for f in files:
-            if need == f.filename:
+            if name == f.filename:
                 member = f
                 exist = True
         if not exist:
-            print('There is no such file in archive ', self.old_path)
-            self.old_archive.close()
+            print('There is no such file in archive ', self.path)
+            self.archive.close()
             return False
-        xml_extracted = self.old_archive.extract(member)
-        return xml_extracted
+        try:
+            xml_extracted = self.archive.extract(member)
+            return xml_extracted
+        except PermissionError as err:
+            print('There is no access to writing. Extraction failed')
+            print(err.strerror)
 
     def close(self):
-        self.old_archive.close()
+        """Method closes opened archive.
 
-    def write(self, new_xml, name):
-        if not zipfile.is_zipfile(self.old_path):
-            print('You used a wrong file. Try again.')
+        """
+        self.archive.close()
+
+    def write(self, new_file, name):
+        """Method makes dupe for archive and replace with new_file or add new_file.
+
+        It forms new archive using relative path to script directory.
+        So, to make archive from one file, it should be in script`s directory.
+        
+        :param new_file: path to new file.
+        :param name: name for new archive.
+        :return: False on errors, True on success
+        """
+        if not zipfile.is_zipfile(self.path):
+            print('File you used is not archive. Writing failed.')
             return False
-        self.old_archive = zipfile.ZipFile(self.old_path, 'r')
-        files = self.old_archive.infolist()
-        new_archive = zipfile.ZipFile(name, 'x')
-        new_archive.write(new_xml, os.path.relpath(new_xml))
-        os.remove(os.path.relpath(new_xml))
+        self.archive = zipfile.ZipFile(self.path, 'r')
+        files = self.archive.infolist()
+        try:
+            new_archive = zipfile.ZipFile(name, 'x')
+        except PermissionError as err:
+            print('There is no access to writing. Extraction failed')
+            print(err.strerror)
+            return False
+        new_archive.write(new_file, os.path.relpath(new_file))
         redundant_dirs = set()
         for f in files:
-            if os.path.basename(new_xml) == f.filename:
+            if os.path.basename(new_file) == f.filename:
                 continue
             f_copy = self.extract(f.filename)
             new_archive.write(f_copy, os.path.relpath(f_copy))
@@ -52,7 +78,7 @@ class XMLExtractor(object):
                     redundant_dirs.add(os.path.dirname(f_copy))
             else:
                 os.remove(os.path.relpath(f_copy))
-        cur_dir = os.path.normpath(sys.argv[0]).replace('xml_extract.py', '')
+        cur_dir = os.path.normpath(sys.argv[0]).replace(os.path.basename(sys.argv[0]), '')
         for red_dir in redundant_dirs:
             red_dir_ = red_dir.replace(cur_dir, '')
             if red_dir != red_dir_:
@@ -61,17 +87,10 @@ class XMLExtractor(object):
                 except FileNotFoundError:
                     continue
         new_archive.close()
+        return True
 
 
+# module tests
 if __name__ == '__main__':
-    s = 'a'.replace('a', '')
-    print(s)
-    xml_extractor = XMLExtractor('test_data/full_p_com.odt')
-    path_ = xml_extractor.extract('content.xml')
-    print(path_)
-
-    xml_extractor.close()
-    xml_extractor = XMLExtractor('test_data/full_p.odt')
-    xml_extractor.write(path_, 'new_odt.odt')
-
+    pass
 
