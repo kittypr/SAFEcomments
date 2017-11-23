@@ -27,21 +27,27 @@ def extract_xml(odt_filename):
 def transfer_annotations(annotations_list):
     for a in annotations_list:
         new_parent_text = annotation.get_text(a.new_parent)
+        for child in a.new_parent.getchildren():
+            a.new_parent.remove(child)
         if a.has_text:
             c = compare.find_new_string(a.get_annotation_text(), new_parent_text)
             if c is not None:
-                print(new_parent_text[c[0]:c[0] + c[1]])
-                print(c[-1])
+                a.new_parent.text = new_parent_text[:c[0]]
+                a.annotation_node.tail = new_parent_text[c[0]:c[0] + c[1]]
+                a.annotation_end_node.tail = new_parent_text[c[0] + c[1]:]
+                a.new_parent.insert(0, a.annotation_node)
+                a.new_parent.insert(1, a.annotation_end_node)
             else:
-                a.annotation_node.tail = a.new_parent.text
+                a.annotation_node.tail = new_parent_text
                 a.new_parent.text = None
-                a.new_parent.insert(0, a.annotation_node)  # TODO remove office:name attribute
+                a.annotation_node.attrib.pop('{urn:oasis:names:tc:opendocument:xmlns:office:1.0}name')
+                a.new_parent.insert(0, a.annotation_node)
         else:
             c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text)
             c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text)
             if c1 is not None and c2 is not None:
                 c = c1 if c1[-1] > c2[-1] else c2
-                place = 'tail'
+                place = 'tail' if c[-1] > c2[-2] else 'head'
             elif c1 is not None:
                 c = c1
                 place = 'tail'
@@ -50,17 +56,17 @@ def transfer_annotations(annotations_list):
                 place = 'head'
             if c is not None:
                 if place == 'tail':
-                    a.annotation_node.tail = a.new_parent.text[c[0]:len(a.new_parent.text)]
-                    a.new_parent.text = a.new_parent.text[0:c[0]]
+                    a.annotation_node.tail = new_parent_text[c[0]:]
+                    a.new_parent.text = new_parent_text[:c[0]]
                     a.new_parent.insert(0, a.annotation_node)
                 else:
-                    a.annotation_node.tail = a.new_parent.text[c[0] + c[1]:len(a.new_parent.text)]
-                    a.new_parent.text = a.new_parent.text[0:c[0] + c[1]]
+                    a.annotation_node.tail = new_parent_text[c[0] + c[1]:]
+                    a.new_parent.text = new_parent_text[:c[0] + c[1]]
                     a.new_parent.insert(0, a.annotation_node)
             else:
-                a.annotation_node.tail = a.new_parent.text
+                a.annotation_node.tail = new_parent_text
                 a.new_parent.text = None
-                a.new_parent.insert(0, a.annotation_node)  # TODO remove office:name attribute
+                a.new_parent.insert(0, a.annotation_node)
 
 
 if __name__ == '__main__':
