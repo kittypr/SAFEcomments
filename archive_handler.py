@@ -4,7 +4,17 @@ import shutil
 import sys
 
 
-class XMLExtractor(object):
+class ArchiveHandler(object):
+    """Class that works with archive.
+
+    It is a class, that creating with path to archive.
+    After creating, it can:
+    write file to archive -
+    1)It makes dupe of archive, that it got during creation.
+    2)During making dupe it writes new file to archive or rewrite file with same name.
+    extract file from archive -
+    1)Extract file with certain name from archive to script's directory.
+    """
 
     def __init__(self, path):
         self.path = path
@@ -15,7 +25,6 @@ class XMLExtractor(object):
 
         :param name: the name of the file that need to be extracted.
         :return: False on errors, path to extracted file on success.
-
         """
         if not zipfile.is_zipfile(self.path):
             print('File you used is not archive. Extraction failed.')
@@ -41,12 +50,11 @@ class XMLExtractor(object):
 
     def close(self):
         """Method closes opened archive.
-
         """
         self.archive.close()
 
     def write(self, new_file, name):
-        """Method makes dupe for archive and replace with new_file or add new_file.
+        """Method makes dupe for archive from self.archive and replace file with new_file or add new_file.
 
         It forms new archive using relative path to script directory.
         So, to make archive from one file, it should be in script`s directory.
@@ -92,5 +100,4 @@ class XMLExtractor(object):
 
 # module tests
 if __name__ == '__main__':
-    pass
-
+    print(ArchiveHandler.__doc__)

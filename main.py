@@ -1,9 +1,13 @@
-from lxml import etree
-import odt_namespaces
 import annotation
-import compare
-import xml_extract
 import argparse
+import os
+
+from lxml import etree
+
+import archive_handler
+import compare
+import odt_namespaces
+
 
 parser = argparse.ArgumentParser(description='This is simple utility program to transfer annotations from one odt file '
                                              'to another')
@@ -19,9 +23,9 @@ def register_namespaces():
 
 
 def extract_xml(odt_filename):
-    extractor = xml_extract.XMLExtractor(odt_filename)
-    extractor.extract('content.xml')
-    return extractor
+    extr = archive_handler.ArchiveHandler(odt_filename)
+    extr.extract('content.xml')
+    return extr
 
 
 def transfer_annotations(annotations_list):
@@ -78,9 +82,10 @@ if __name__ == '__main__':
     extractor.close()
 
     extractor = extract_xml(args.dest)
-    not_commented_tree = etree.parse("content.xml")
+    not_commented_tree = etree.parse('content.xml')
     compare.compare(annotations_list, not_commented_tree)
 
     transfer_annotations(annotations_list)
     not_commented_tree.write('content.xml', encoding='UTF-8', method='xml')
     extractor.write('content.xml', args.output)
+    os.remove('content.xml')
