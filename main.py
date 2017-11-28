@@ -1,9 +1,9 @@
-import annotation
 import argparse
 import os
 
 from lxml import etree
 
+import annotation
 import archive_handler
 import compare
 import odt_namespaces
