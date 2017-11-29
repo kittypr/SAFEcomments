@@ -1,6 +1,5 @@
 import argparse
 import os
-import copy
 
 from lxml import etree
 
@@ -96,6 +95,7 @@ def insert_annotation_on_text(ann, position, new_parent_text):
 
 
 def transfer_annotations(a_list):
+    i = 0
     for a in a_list:
         new_parent_text = annotation.get_text(a.new_parent)
         if a.has_text:
@@ -106,7 +106,7 @@ def transfer_annotations(a_list):
                 a.annotation_node.tail = new_parent_text
                 a.new_parent.text = None
                 a.annotation_node.attrib.pop('{urn:oasis:names:tc:opendocument:xmlns:office:1.0}name')
-                a.new_parent.insert(0, a.annotation_node)
+                a.new_parent.insert(i, a.annotation_node)
         else:
             c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text)
             c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text)
@@ -123,15 +123,16 @@ def transfer_annotations(a_list):
                 if place == 'tail':
                     a.annotation_node.tail = new_parent_text[c[0]:]
                     a.new_parent.text = new_parent_text[:c[0]]
-                    a.new_parent.insert(0, a.annotation_node)
+                    a.new_parent.insert(i, a.annotation_node)
                 else:
                     a.annotation_node.tail = new_parent_text[c[0] + c[1]:]
                     a.new_parent.text = new_parent_text[:c[0] + c[1]]
-                    a.new_parent.insert(0, a.annotation_node)
+                    a.new_parent.insert(i, a.annotation_node)
             else:
                 a.annotation_node.tail = new_parent_text
                 a.new_parent.text = None
-                a.new_parent.insert(0, a.annotation_node)
+                a.new_parent.insert(i, a.annotation_node)
+        i = i + 1
 
 
 if __name__ == '__main__':
