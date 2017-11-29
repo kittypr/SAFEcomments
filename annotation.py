@@ -32,7 +32,7 @@ class Annotation:
             if self.annotation_node.tail:
                 string += self.annotation_node.tail
             sibling = self.annotation_node.getnext()
-            while sibling is not None and sibling.tag != '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation-end':
+            while sibling is not None and (self.annotation_end_node is not None and sibling != self.annotation_end_node):
                 string += get_text(sibling)
                 sibling = sibling.getnext()
             self.annotation_text = string
