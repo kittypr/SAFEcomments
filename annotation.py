@@ -24,26 +24,25 @@ class Annotation:
             self.parent_text = get_text(self.parent_node)
         return self.parent_text
 
-    def get_annotation_text(self):
-        if self.annotation_text is not None:
-            return self.annotation_text
+    def extract_annotation_text(self):
+        string = ''
+        if self.annotation_node.tail:
+            string += self.annotation_node.tail
+        sibling = self.annotation_node.getnext()
+        while sibling is not None and (self.annotation_end_node is not None and sibling != self.annotation_end_node):
+            string += get_text(sibling)
+            sibling = sibling.getnext()
+        if string == '':
+            self.annotation_text = None
         else:
-            string = ''
-            if self.annotation_node.tail:
-                string += self.annotation_node.tail
-            sibling = self.annotation_node.getnext()
-            while sibling is not None and (self.annotation_end_node is not None and sibling != self.annotation_end_node):
-                string += get_text(sibling)
-                sibling = sibling.getnext()
             self.annotation_text = string
+
+    def get_annotation_text(self):  # TODO exception when None
+        # if self.annotation_text is not None:
         return self.annotation_text
 
-    def get_annotation_tail(self):
-        if self.has_text:
-            return None
-        if self.annotation_tail is not None:
-            return self.annotation_tail
-        else:
+    def extract_annotation_tail(self):
+        if not self.has_text:
             string = ''
             if self.annotation_node.tail:
                 string += self.annotation_node.tail
@@ -51,22 +50,31 @@ class Annotation:
             while sibling is not None:
                 string += get_text(sibling)
                 sibling = sibling.getnext()
-            self.annotation_tail = string
+            if string == '':
+                self.annotation_tail = None
+            else:
+                self.annotation_tail = string
+
+    def get_annotation_tail(self):
+        # if self.annotation_tail is not None:
         return self.annotation_tail
 
-    def get_annotation_head(self):
-        if self.annotation_head is not None:
-            return self.annotation_head
+    def extract_annotation_head(self):
+        string = ''
+        if self.parent_node.text:
+            string += self.parent_node.text
+        children = self.parent_node.getchildren()
+        for child in children:
+            if child.tag == '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation':
+                break
+            string += get_text(child)
+        if string == '':
+            self.annotation_head = None
         else:
-            string = ''
-            if self.parent_node.text:
-                string += self.parent_node.text
-            children = self.parent_node.getchildren()
-            for child in children:
-                if child.tag == '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation':
-                    break
-                string += get_text(child)
             self.annotation_head = string
+
+    def get_annotation_head(self):
+        # if self.annotation_head is not None:
         return self.annotation_head
 
 
@@ -79,6 +87,10 @@ def extract_annotations(element_tree):
             a.has_text = True
             path = '//office:annotation-end[@office:name=\'' + a.annotation_node.attrib['{urn:oasis:names:tc:opendocument:xmlns:office:1.0}name'] + '\']'
             a.annotation_end_node = element_tree.xpath(_path=path, namespaces=odt_namespaces.namespaces)[0]
+            a.extract_annotation_text()
+        else:
+            a.extract_annotation_tail()
+            a.extract_annotation_head()
     return annotations_list
 
 

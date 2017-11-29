@@ -1,5 +1,6 @@
 import argparse
 import os
+import copy
 
 from lxml import etree
 
@@ -29,7 +30,6 @@ def extract_xml(odt_filename):
 
 
 def insert_in_child(node, parent_node, annotation_node, annotation_end_node, position, new_parent_text, current_len):  # TODO return when annotation and annotation-end inserted
-    # current_len += len(ann.new_parent.text)
     children = node.getchildren()
     if node.text is not None:
         delta_len = len(node.text)
@@ -92,22 +92,15 @@ def insert_annotation_on_text(ann, position, new_parent_text):
             ann.annotation_node.tail = new_parent_text[position[0]:current_len]
             ann.new_parent.insert(0, ann.annotation_node)
     for child in children:
-         current_len = insert_in_child(child, ann.new_parent, ann.annotation_node, ann.annotation_end_node, position, new_parent_text, current_len)
+        current_len = insert_in_child(child, ann.new_parent, ann.annotation_node, ann.annotation_end_node, position, new_parent_text, current_len)
 
 
-def transfer_annotations(annotations_list):
-    for a in annotations_list:
+def transfer_annotations(a_list):
+    for a in a_list:
         new_parent_text = annotation.get_text(a.new_parent)
-        # for child in a.new_parent.getchildren():
-        #     a.new_parent.remove(child)
         if a.has_text:
             c = compare.find_new_string(a.get_annotation_text(), new_parent_text)
             if c is not None:
-                # a.new_parent.text = new_parent_text[:c[0]]
-                # a.annotation_node.tail = new_parent_text[c[0]:c[0] + c[1]]
-                # a.annotation_end_node.tail = new_parent_text[c[0] + c[1]:]
-                # a.new_parent.insert(0, a.annotation_node)
-                # a.new_parent.insert(1, a.annotation_end_node)
                 insert_annotation_on_text(a, c, new_parent_text)
             else:
                 a.annotation_node.tail = new_parent_text
