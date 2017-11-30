@@ -28,7 +28,7 @@ def extract_xml(odt_filename):
     return extr
 
 
-def insert_in_child(node, parent_node, annotation_node, annotation_end_node, position, new_parent_text, current_len):  # TODO return when annotation and annotation-end inserted
+def insert_on_text_in_child(node, parent_node, annotation_node, annotation_end_node, position, new_parent_text, current_len):
     children = node.getchildren()
     if node.text is not None:
         delta_len = len(node.text)
@@ -38,6 +38,7 @@ def insert_in_child(node, parent_node, annotation_node, annotation_end_node, pos
             annotation_end_node.tail = new_parent_text[position[0] + position[1]:current_len + delta_len]
             node.insert(0, annotation_node)
             node.insert(1, annotation_end_node)
+            return -1
         elif position[0] in range(current_len + 1, current_len + delta_len + 1):
             node.text = new_parent_text[current_len:position[0]]
             annotation_node.tail = new_parent_text[position[0]:current_len + delta_len]
@@ -46,10 +47,13 @@ def insert_in_child(node, parent_node, annotation_node, annotation_end_node, pos
             node.text = new_parent_text[current_len:position[0] + position[1]]
             annotation_end_node.tail = new_parent_text[position[0] + position[1]:current_len + delta_len]
             node.insert(0, annotation_end_node)
+            return -1
         current_len += delta_len
     if node.tag != '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation':
         for child in children:
-            current_len = insert_in_child(child, node, annotation_node, annotation_end_node, position, new_parent_text, current_len)
+            current_len = insert_on_text_in_child(child, node, annotation_node, annotation_end_node, position, new_parent_text, current_len)
+            if current_len == -1:
+                return -1
     if node.tail is not None:
         delta_len = len(node.tail)
         if position[0] in range(current_len + 1, current_len + delta_len + 1) and position[0] + position[1] in range(current_len + 1, current_len + delta_len + 1):
@@ -59,6 +63,7 @@ def insert_in_child(node, parent_node, annotation_node, annotation_end_node, pos
             index = parent_node.index(node)
             parent_node.insert(index + 1, annotation_node)
             parent_node.insert(index + 2, annotation_end_node)
+            return -1
         elif position[0] in range(current_len + 1, current_len + delta_len + 1):
             node.tail = new_parent_text[current_len:position[0]]
             annotation_node.tail = new_parent_text[position[0]:current_len + delta_len]
@@ -69,11 +74,12 @@ def insert_in_child(node, parent_node, annotation_node, annotation_end_node, pos
             annotation_end_node.tail = new_parent_text[position[0] + position[1]:current_len + delta_len]
             index = parent_node.index(node)
             parent_node.insert(index + 1, annotation_end_node)
+            return -1
         current_len += delta_len
     return current_len
 
 
-def insert_annotation_on_text(ann, position, new_parent_text):
+def insert_annotation_on_text(ann, position, new_parent_text):  # position is tuple with (offset, len, similarity)
     current_len = len(ann.new_parent.text)
     children = ann.new_parent.getchildren()
     ann.annotation_node.tail = None
@@ -91,48 +97,80 @@ def insert_annotation_on_text(ann, position, new_parent_text):
             ann.annotation_node.tail = new_parent_text[position[0]:current_len]
             ann.new_parent.insert(0, ann.annotation_node)
     for child in children:
-        current_len = insert_in_child(child, ann.new_parent, ann.annotation_node, ann.annotation_end_node, position, new_parent_text, current_len)
+        current_len = insert_on_text_in_child(child, ann.new_parent, ann.annotation_node, ann.annotation_end_node, position, new_parent_text, current_len)
+        if current_len == -1:
+            return
+
+
+def insert_in_child(node, parent_node, annotation_node, position, new_parent_text, current_len):
+    children = node.getchildren()
+    if node.text is not None:
+        delta_len = len(node.text)
+        if position in range(current_len + 1, current_len + delta_len + 1):
+            node.text = new_parent_text[current_len:position]
+            annotation_node.tail = new_parent_text[position:current_len + delta_len]
+            node.insert(0, annotation_node)
+            return -1
+        current_len += delta_len
+    if node.tag != '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation':
+        for child in children:
+            current_len = insert_in_child(child, node, annotation_node, position, new_parent_text, current_len)
+            if current_len == -1:
+                return -1
+    if node.tail is not None:
+        delta_len = len(node.tail)
+        if position in range(current_len + 1, current_len + delta_len + 1):
+            node.tail = new_parent_text[current_len:position]
+            annotation_node.tail = new_parent_text[position:current_len + delta_len]
+            index = parent_node.index(node)
+            parent_node.insert(index + 1, annotation_node)
+            return -1
+        current_len += delta_len
+    return current_len
+
+
+def insert_annotation(ann, position, new_parent_text):  # position is offset
+    current_len = len(ann.new_parent.text)
+    children = ann.new_parent.getchildren()
+    ann.annotation_node.tail = None
+    if current_len >= position:
+        ann.new_parent.text = new_parent_text[:position]
+        ann.annotation_node.tail = new_parent_text[position:current_len]
+        ann.new_parent.insert(0, ann.annotation_node)
+        return
+    for child in children:
+        current_len = insert_in_child(child, ann.new_parent, ann.annotation_node, position, new_parent_text, current_len)
+        if current_len == -1:
+            return
 
 
 def transfer_annotations(a_list):
-    i = 0
     for a in a_list:
+        if a.new_parent is None:  # protects us against files without text
+            continue
+        print(a.annotation_node)
         new_parent_text = annotation.get_text(a.new_parent)
         if a.has_text:
             c = compare.find_new_string(a.get_annotation_text(), new_parent_text)
             if c is not None:
                 insert_annotation_on_text(a, c, new_parent_text)
             else:
-                a.annotation_node.tail = new_parent_text
-                a.new_parent.text = None
                 a.annotation_node.attrib.pop('{urn:oasis:names:tc:opendocument:xmlns:office:1.0}name')
-                a.new_parent.insert(i, a.annotation_node)
+                insert_annotation(a, 0, new_parent_text)
         else:
             c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text)
             c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text)
             if c1 is not None and c2 is not None:
-                c = c1 if c1[-1] > c2[-1] else c2
-                place = 'tail' if c[-1] > c2[-2] else 'head'
-            elif c1 is not None:
-                c = c1
-                place = 'tail'
-            else:
-                c = c2
-                place = 'head'
-            if c is not None:
-                if place == 'tail':
-                    a.annotation_node.tail = new_parent_text[c[0]:]
-                    a.new_parent.text = new_parent_text[:c[0]]
-                    a.new_parent.insert(i, a.annotation_node)
+                if c1[-1] > c2[-1]:
+                    insert_annotation(a, c1[0], new_parent_text)
                 else:
-                    a.annotation_node.tail = new_parent_text[c[0] + c[1]:]
-                    a.new_parent.text = new_parent_text[:c[0] + c[1]]
-                    a.new_parent.insert(i, a.annotation_node)
+                    insert_annotation(a, c2[0] + c2[1], new_parent_text)
+            elif c1 is not None:
+                insert_annotation(a, c1[0], new_parent_text)
+            elif c2 is not None:
+                insert_annotation(a, c2[0] + c2[1], new_parent_text)
             else:
-                a.annotation_node.tail = new_parent_text
-                a.new_parent.text = None
-                a.new_parent.insert(i, a.annotation_node)
-        i = i + 1
+                insert_annotation(a, 0, new_parent_text)
 
 
 if __name__ == '__main__':

@@ -65,7 +65,7 @@ class Annotation:
             string += self.parent_node.text
         children = self.parent_node.getchildren()
         for child in children:
-            if child.tag == '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}annotation':
+            if child == self.annotation_node:
                 break
             string += get_text(child)
         if string == '':

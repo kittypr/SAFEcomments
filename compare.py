@@ -23,7 +23,7 @@ def compare(annotations_list, new_etree):
         i = 0
         for annotation_node in annotations_list:
             similarity = difflib.SequenceMatcher(None, annotation_node.get_text(), annotation.get_text(p_node)).ratio()
-            if similarity > ratios[i]:
+            if similarity > ratios[i]:  # >= ??
                 ratios[i] = similarity
                 annotation_node.set_new_parent(p_node)
             i += 1
