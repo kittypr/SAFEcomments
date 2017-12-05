@@ -4,10 +4,6 @@ import annotation
 import odt_namespaces
 
 
-EXACT_MATCH_SIMILARITY = 0.6  # similarity of substring
-PARTLY_DELETION_SIMILARITY = 0.5  # fuzzy similarity
-
-
 def compare(annotations_list, new_etree):
     """ This function fine new parent for every annotation.
 
@@ -29,7 +25,7 @@ def compare(annotations_list, new_etree):
             i += 1
 
 
-def find_new_string(string, text):
+def find_new_string(string, text, partly_deletion_similarity=0.6, exact_match_similarity=0.6):
     """Find new commented fragment in parent`s text.
 
     Used 3 different stages:
@@ -41,8 +37,10 @@ def find_new_string(string, text):
     3 - function uses partly_deletion() algorythm of finding new segment.
     function ends work with result, if it is good enough.
 
-    :param string: original commented segment
-    :param text: text of nes parent for annotation
+    :param string: original commented segment.
+    :param text: text of nes parent for annotation.
+    :param exact_match_similarity: similarity of substring.
+    :param partly_deletion_similarity: fuzzy similarity.
 
     :return: set, that consists of 0 - start position in new text, 1 - length, 2 - similarity on success,
              None in other case.
@@ -54,12 +52,10 @@ def find_new_string(string, text):
         return find_result, len(string), 1
     sm = difflib.SequenceMatcher(None, string, text, False)
     result = sm.find_longest_match(0, len(string), 0, len(text))
-    global EXACT_MATCH_SIMILARITY
-    if result[-1] / len(string) >= EXACT_MATCH_SIMILARITY:
+    if result[-1] / len(string) >= exact_match_similarity:
         return result[1], result[-1], result[-1] / len(string)
     result = partly_deletion(string, text)
-    global PARTLY_DELETION_SIMILARITY
-    if result[-1] >= PARTLY_DELETION_SIMILARITY:
+    if result[-1] >= partly_deletion_similarity:
         return result
     return None
 

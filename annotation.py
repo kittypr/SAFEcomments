@@ -38,7 +38,8 @@ class Annotation:
             self.annotation_text = string
 
     def get_annotation_text(self):  # TODO exception when None
-        # if self.annotation_text is not None:
+        if self.annotation_text is None:
+            raise ValueError('annotation text is None.')
         return self.annotation_text
 
     def extract_annotation_tail(self):
@@ -56,7 +57,8 @@ class Annotation:
                 self.annotation_tail = string
 
     def get_annotation_tail(self):
-        # if self.annotation_tail is not None:
+        if self.annotation_tail is None:
+            raise ValueError('annotation tail is None.')
         return self.annotation_tail
 
     def extract_annotation_head(self):
@@ -74,7 +76,8 @@ class Annotation:
             self.annotation_head = string
 
     def get_annotation_head(self):
-        # if self.annotation_head is not None:
+        if self.annotation_head is None:
+            raise ValueError('annotation head is None.')
         return self.annotation_head
 
 

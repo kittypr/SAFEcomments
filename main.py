@@ -8,12 +8,17 @@ import archive_handler
 import compare
 import odt_namespaces
 
+exact_similarity = 0.6
+fuzzy_similarity = 0.6
+
 
 parser = argparse.ArgumentParser(description='This is simple utility program to transfer annotations from one odt file '
                                              'to another')
 parser.add_argument('src', help='Input file with annotations to transfer. Use .odt extension.', action='store')
 parser.add_argument('dest', help='Input file without annotations. Use .odt extension.', action='store')
 parser.add_argument('output', help='Output file. Use .odt extension.', action='store')
+parser.add_argument('-e', '-exact', help='Similarity of substring.', action='store')
+parser.add_argument('-f', '-fuzzy', help='Fuzzy similarity.', action='store')
 args = parser.parse_args()
 
 
@@ -80,7 +85,10 @@ def insert_on_text_in_child(node, parent_node, annotation_node, annotation_end_n
 
 
 def insert_annotation_on_text(ann, position, new_parent_text):  # position is tuple with (offset, len, similarity)
-    current_len = len(ann.new_parent.text)
+    try:
+        current_len = len(ann.new_parent.text)
+    except TypeError:
+        current_len = 0
     children = ann.new_parent.getchildren()
     ann.annotation_node.tail = None
     ann.annotation_end_node.tail = None
@@ -130,7 +138,10 @@ def insert_in_child(node, parent_node, annotation_node, position, new_parent_tex
 
 
 def insert_annotation(ann, position, new_parent_text):  # position is offset
-    current_len = len(ann.new_parent.text)
+    try:
+        current_len = len(ann.new_parent.text)
+    except TypeError:
+        current_len = 0
     children = ann.new_parent.getchildren()
     ann.annotation_node.tail = None
     if current_len >= position:
@@ -151,15 +162,15 @@ def transfer_annotations(a_list):
         print(a.annotation_node)
         new_parent_text = annotation.get_text(a.new_parent)
         if a.has_text:
-            c = compare.find_new_string(a.get_annotation_text(), new_parent_text)
+            c = compare.find_new_string(a.get_annotation_text(), new_parent_text, fuzzy_similarity, exact_similarity)
             if c is not None:
                 insert_annotation_on_text(a, c, new_parent_text)
             else:
                 a.annotation_node.attrib.pop('{urn:oasis:names:tc:opendocument:xmlns:office:1.0}name')
                 insert_annotation(a, 0, new_parent_text)
         else:
-            c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text)
-            c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text)
+            c1 = compare.find_new_string(a.get_annotation_tail(), new_parent_text, fuzzy_similarity, exact_similarity)
+            c2 = compare.find_new_string(a.get_annotation_head(), new_parent_text, fuzzy_similarity, exact_similarity)
             if c1 is not None and c2 is not None:
                 if c1[-1] > c2[-1]:
                     insert_annotation(a, c1[0], new_parent_text)
@@ -175,6 +186,11 @@ def transfer_annotations(a_list):
 
 if __name__ == '__main__':
     register_namespaces()
+
+    if args.e:
+        exact_similarity = float(args.e)
+    if args.f:
+        fuzzy_similarity = float(args.f)
 
     extractor = extract_xml(args.src)
     commented_tree = etree.parse('content.xml')
