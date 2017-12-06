@@ -17,8 +17,10 @@ def compare(annotations_list, new_etree):
     ratios = [0] * len(annotations_list)
     for p_node in new_etree.findall('.//text:p', odt_namespaces.namespaces):
         i = 0
+        p_text = annotation.get_text(p_node)
         for annotation_node in annotations_list:
-            similarity = difflib.SequenceMatcher(None, annotation_node.get_text(), annotation.get_text(p_node)).ratio()
+            ann_parent_text = annotation_node.get_text()
+            similarity = difflib.SequenceMatcher(None, ann_parent_text, p_text).ratio()
             if similarity > ratios[i]:  # >= ??
                 ratios[i] = similarity
                 annotation_node.set_new_parent(p_node)
