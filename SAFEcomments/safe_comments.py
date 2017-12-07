@@ -4,7 +4,7 @@ import os
 
 from lxml import etree
 
-import SAFEcomments.annotation as annotation
+from SAFEcomments import annotation
 from SAFEcomments import archive_handler
 from SAFEcomments import compare
 from SAFEcomments import odt_namespaces

@@ -87,16 +87,11 @@ class ArchiveHandler(object):
             else:
                 os.remove(os.path.relpath(f_copy))
         cur_dir = os.path.normpath(sys.argv[0]).replace(os.path.basename(sys.argv[0]), '')
-        print('CUR DIR: ', cur_dir)
         for red_dir in redundant_dirs:
-            print('REDUCED DIRECTORY: ', red_dir)
-            red_dir_ = red_dir.replace(cur_dir, '')
-            print('DELETING DIRECTORY: ', red_dir_)
-            if red_dir != red_dir_:
-                try:
-                    shutil.rmtree(red_dir_)
-                except FileNotFoundError:
-                    continue
+            try:
+                shutil.rmtree(red_dir)
+            except FileNotFoundError:
+                continue
         new_archive.close()
         return True
 
