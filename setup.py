@@ -29,7 +29,7 @@ setup(
 
     keywords='comments transfer annotations notes',
 
-    install_requires=['lxml=4.1.1'],
+    install_requires=['lxml==4.1.1'],
 
     scripts=['safecomments/main.py'],
 
