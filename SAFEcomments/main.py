@@ -3,10 +3,10 @@ import os
 
 from lxml import etree
 
-import annotation
-import archive_handler
-import compare
-import odt_namespaces
+from SAFEcomments import annotation
+from SAFEcomments import archive_handler
+from SAFEcomments import compare
+from SAFEcomments import odt_namespaces
 
 exact_similarity = 0.6
 fuzzy_similarity = 0.6
