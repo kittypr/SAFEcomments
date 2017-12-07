@@ -31,7 +31,7 @@ setup(
 
     install_requires=['lxml==4.1.1'],
 
-    scripts=['safecomments/SAFEcomments.py'],
+    scripts=['SAFEcomments/safe_comments.py'],
 
     packages=find_packages()
 )
