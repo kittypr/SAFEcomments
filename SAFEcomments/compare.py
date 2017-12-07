@@ -1,7 +1,7 @@
 import difflib
 
-import annotation
-import odt_namespaces
+from SAFEcomments import annotation
+from SAFEcomments import odt_namespaces
 
 
 def compare(annotations_list, new_etree):

@@ -1,4 +1,4 @@
-import odt_namespaces
+from SAFEcomments import odt_namespaces
 
 
 class Annotation:
