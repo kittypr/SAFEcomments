@@ -169,7 +169,6 @@ def transfer_annotations(a_list, tree):
         if a.new_parent is None:  # protects us against files without text
             insert_orphan(a.annotation_node, tree, a.annotation_end_node)
             continue
-        print(a.annotation_node)
         new_parent_text = annotation.get_text(a.new_parent)
         if a.has_text:
             c = compare.find_new_string(a.get_annotation_text(), new_parent_text, fuzzy_similarity, exact_similarity)
