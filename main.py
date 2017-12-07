@@ -155,9 +155,19 @@ def insert_annotation(ann, position, new_parent_text):  # position is offset
             return
 
 
-def transfer_annotations(a_list):
+def insert_orphan(annotation_node, tree, annotation_end_node=None):
+    text_node = tree.find('.//office:text', odt_namespaces.namespaces)
+    p_node = etree.Element('{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p')
+    text_node.insert(0, p_node)
+    p_node.insert(0, annotation_node)
+    if annotation_end_node is not None:
+        p_node.insert(1, annotation_end_node)
+
+
+def transfer_annotations(a_list, tree):
     for a in a_list:
         if a.new_parent is None:  # protects us against files without text
+            insert_orphan(a.annotation_node, tree, a.annotation_end_node)
             continue
         print(a.annotation_node)
         new_parent_text = annotation.get_text(a.new_parent)
@@ -201,7 +211,7 @@ if __name__ == '__main__':
     not_commented_tree = etree.parse('content.xml')
     compare.compare(annotations_list, not_commented_tree)
 
-    transfer_annotations(annotations_list)
+    transfer_annotations(annotations_list, not_commented_tree)
     not_commented_tree.write('content.xml', encoding='UTF-8', method='xml')
     extractor.write('content.xml', args.output)
     os.remove('content.xml')

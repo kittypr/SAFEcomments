@@ -86,8 +86,7 @@ class Annotation:
 
 def find_matching_parent(annotation):
     parent = annotation.getparent()
-    while parent.tag is not None and parent.tag != '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p':
-        print(parent.tag)
+    while parent.tag is not None and parent.tag != '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p' and parent.tag != '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}h':
         parent = parent.getparent()
     return parent
 
