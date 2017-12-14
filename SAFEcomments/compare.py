@@ -18,6 +18,8 @@ def compare(annotations_list, new_etree):
     for p_node in new_etree.findall('.//text:p', odt_namespaces.namespaces):
         i = 0
         p_text = annotation.get_text(p_node)
+        if p_text == '':
+            continue
         for annotation_node in annotations_list:
             ann_parent_text = annotation_node.get_text()
             similarity = difflib.SequenceMatcher(None, ann_parent_text, p_text).ratio()
@@ -28,6 +30,8 @@ def compare(annotations_list, new_etree):
     for h_node in new_etree.findall('.//text:h', odt_namespaces.namespaces):
         i = 0
         p_text = annotation.get_text(h_node)
+        if p_text == '':
+            continue
         for annotation_node in annotations_list:
             ann_parent_text = annotation_node.get_text()
             similarity = difflib.SequenceMatcher(None, ann_parent_text, p_text).ratio()
@@ -35,6 +39,13 @@ def compare(annotations_list, new_etree):
                 ratios[i] = similarity
                 annotation_node.set_new_parent(h_node)
             i += 1
+    for a in annotations_list:
+        if a.new_parent is None and a.draw_frame is not None:
+            path = '//draw:frame[@draw:name=\'' + a.draw_frame.attrib['{urn:oasis:names:tc:opendocument:xmlns:drawing:1.0}name'] + '\']'
+            node = new_etree.xpath(_path=path, namespaces=odt_namespaces.namespaces)[0]
+            a.draw_frame = node
+            if node is not None:
+                a.new_parent = node.getparent()
 
 
 def find_new_string(string, text, partly_deletion_similarity=0.6, exact_match_similarity=0.6):

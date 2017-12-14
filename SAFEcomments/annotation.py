@@ -13,6 +13,7 @@ class Annotation:
         self.parent_text = None
         self.annotation_tail = None
         self.annotation_head = None
+        self.draw_frame = None
 
     def set_new_parent(self, new_parent):
         self.new_parent = new_parent
@@ -24,12 +25,14 @@ class Annotation:
 
     def extract_annotation_text(self):
         string = ''
-        if self.annotation_node.tail:
-            string += self.annotation_node.tail
         parent = self.annotation_node
         while parent != self.parent_node:
+            if parent.tail:
+                string += parent.tail
             sibling = parent.getnext()
-            while sibling is not None and (self.annotation_end_node is not None and sibling != self.annotation_end_node):
+            while sibling is not None and sibling != self.annotation_end_node:
+                if sibling.tag == '{urn:oasis:names:tc:opendocument:xmlns:drawing:1.0}frame' and self.draw_frame is None:
+                    self.draw_frame = sibling
                 string += get_text(sibling)
                 sibling = sibling.getnext()
             parent = parent.getparent()
@@ -40,7 +43,7 @@ class Annotation:
             self.annotation_text = string
             self.has_text = True
 
-    def get_annotation_text(self):  # TODO exception when None
+    def get_annotation_text(self):
         # if self.annotation_text is None:
         #     raise ValueError('annotation text is None.')
         return self.annotation_text

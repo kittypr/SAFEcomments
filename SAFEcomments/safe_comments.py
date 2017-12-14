@@ -156,13 +156,18 @@ def insert_annotation(ann, position, new_parent_text):  # position is offset
             return
 
 
+def insert_annotation_on_frame(ann, new_parent):
+    new_parent.insert(new_parent.index(ann.draw_frame) - 1, ann.annotation_node)
+    new_parent.insert(new_parent.index(ann.draw_frame) + 1, ann.annotation_end_node)
+
+
 def insert_orphan(annotation_node, tree, annotation_end_node=None):
     text_node = tree.find('.//office:text', odt_namespaces.namespaces)
     p_node = etree.Element('{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p')
-    text_node.insert(0, p_node)
     p_node.insert(0, annotation_node)
     if annotation_end_node is not None:
         p_node.insert(1, annotation_end_node)
+    text_node.append(p_node)
 
 
 def transfer_annotations(a_list, tree):
@@ -190,6 +195,8 @@ def transfer_annotations(a_list, tree):
                 insert_annotation(a, c1[0], new_parent_text)
             elif c2 is not None:
                 insert_annotation(a, c2[0] + c2[1], new_parent_text)
+            elif a.draw_frame is not None:
+                insert_annotation_on_frame(a, a.new_parent)
             else:
                 insert_annotation(a, 0, new_parent_text)
 
