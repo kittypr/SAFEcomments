@@ -1,6 +1,7 @@
 # SAFEcomments
 
 This is script for transferring notes from version to version. Works with .odt files.
+Python 3.6.3
 
 ## Installing:
 *pip install git+https://github.com/kittypr/SAFEcomments.git*
