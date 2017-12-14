@@ -8,7 +8,7 @@ Python 3.6.3
 
 ## Usage:
 *safe_comments.py input dest output -e A -f B*
-Where:
+ Where:
  - **input** - file with notes.
  - **dest** - updated file in which you want to insert notes.
  - **output** - result of script's work - updated file with transferred notes.
