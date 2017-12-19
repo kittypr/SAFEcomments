@@ -51,12 +51,15 @@ class Annotation:
     def extract_annotation_tail(self):
         if not self.has_text:
             string = ''
-            if self.annotation_node.tail:
-                string += self.annotation_node.tail
-            sibling = self.annotation_node.getnext()
-            while sibling is not None:
-                string += get_text(sibling)
-                sibling = sibling.getnext()
+            parent = self.annotation_node
+            while parent != self.parent_node:
+                if parent.tail:
+                    string += parent.tail
+                sibling = parent.getnext()
+                while sibling is not None:
+                    string += get_text(sibling)
+                    sibling = sibling.getnext()
+                parent = parent.getparent()
             if string == '':
                 self.annotation_tail = None
             else:
@@ -69,13 +72,20 @@ class Annotation:
 
     def extract_annotation_head(self):
         string = ''
-        if self.parent_node.text:
-            string += self.parent_node.text
-        children = self.parent_node.getchildren()
-        for child in children:
-            if child == self.annotation_node:
-                break
-            string += get_text(child)
+        parent = self.annotation_node
+        while parent != self.parent_node:
+            sibling = parent.getprevious()
+            while sibling is not None:
+                string += get_text(sibling)
+                sibling = sibling.getprevious()
+            parent = parent.getparent()
+        # if self.parent_node.text:
+        #     string += self.parent_node.text
+        # children = self.parent_node.getchildren()
+        # for child in children:
+        #     if child == self.annotation_node:
+        #         break
+        #     string += get_text(child)
         if string == '':
             self.annotation_head = None
         else:
