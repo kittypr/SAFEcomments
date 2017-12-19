@@ -42,8 +42,12 @@ def compare(annotations_list, new_etree):
     for a in annotations_list:
         if a.new_parent is None and a.draw_frame is not None:
             path = '//draw:frame[@draw:name=\'' + a.draw_frame.attrib['{urn:oasis:names:tc:opendocument:xmlns:drawing:1.0}name'] + '\']'
-            node = new_etree.xpath(_path=path, namespaces=odt_namespaces.namespaces)[0]
-            a.draw_frame = node
+            try:
+                node = new_etree.xpath(_path=path, namespaces=odt_namespaces.namespaces)[0]
+                a.draw_frame = node
+            except IndexError:
+                a.draw_frame = None
+                continue
             if node is not None:
                 a.new_parent = node.getparent()
 
